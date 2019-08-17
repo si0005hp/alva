@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import auth0 from "./auth0/auth0-util";
 
 class Api {
@@ -8,11 +8,11 @@ class Api {
     };
   }
 
-  public get(url: string): Promise<object | undefined> {
+  public get<T = any, R = AxiosResponse<T>>(url: string): Promise<R> {
     return axios.get(url, this.buildHeaders());
   }
 
-  public post(url: string): Promise<object | undefined> {
+  public post<T = any, R = AxiosResponse<T>>(url: string): Promise<R> {
     return axios.post(url, this.buildHeaders());
   }
 }

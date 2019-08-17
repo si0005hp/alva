@@ -1,12 +1,14 @@
 import React from "react";
 import auth0 from "../auth0/auth0-util";
-import { Redirect } from "react-router";
+import { Note } from "../types";
 
-interface Props {
+export interface MainProps {
+  notes: Note[];
+  isLoading?: boolean;
   history: any;
 }
 
-const Main: React.FC<Props> = ({ history }) => {
+const Main: React.FC<MainProps> = ({ notes = [], isLoading = false, history }) => {
   const logout = () => {
     auth0.logout();
     history.push("/login");
@@ -15,6 +17,15 @@ const Main: React.FC<Props> = ({ history }) => {
   return (
     <>
       <p>Main</p>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <ul>
+          {notes.map(note => (
+            <li key={note.id}>{note.title}</li>
+          ))}
+        </ul>
+      )}
 
       {auth0.isAuthenticated() && (
         <button onClick={() => logout()}>Log out</button>
@@ -23,7 +34,4 @@ const Main: React.FC<Props> = ({ history }) => {
   );
 };
 
-const MainWrapper: React.FC<Props> = (props: Props) =>
-  auth0.isAuthenticated() ? <Main {...props} /> : <Redirect to="/login" />;
-
-export default MainWrapper;
+export default Main;
