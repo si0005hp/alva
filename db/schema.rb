@@ -10,6 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 2019_08_17_065221) do
+
+  create_table "users", force: :cascade do |t|
+    t.string "sub", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sub"], name: "index_users_on_sub", unique: true
+  end
 
 end
