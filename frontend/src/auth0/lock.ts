@@ -7,7 +7,7 @@ const lock = (container: string) =>
     process.env.REACT_APP_AUTH0_CLIENTID || "",
     process.env.REACT_APP_AUTH0_DOMAIN || "",
     {
-      container: "show-auth",
+      container,
       closable: false,
       auth: {
         responseType: "token id_token",
