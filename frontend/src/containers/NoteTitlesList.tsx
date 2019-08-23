@@ -1,4 +1,3 @@
-import Main, { MainProps } from "../components/Main";
 import { Note } from "../types";
 import React, { FC, useEffect } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
@@ -6,6 +5,9 @@ import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import { getNotes } from "../actions/note";
 import { RootState } from "../reducers";
+import NoteTitlesList, {
+  NoteTitlesListProps
+} from "../components/NoteTitlesList";
 
 interface StateProps {
   notes: Note[];
@@ -16,7 +18,7 @@ interface DispatchProps {
   getNotesStart: () => void;
 }
 
-type EnhancedMainProps = MainProps &
+type EnhancedNoteTitlesListProps = NoteTitlesListProps &
   StateProps &
   DispatchProps &
   RouteComponentProps<{}>;
@@ -34,22 +36,32 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps =>
     dispatch
   );
 
-const MainContainer: FC<EnhancedMainProps> = ({
+const NoteTitlesListContainer: FC<EnhancedNoteTitlesListProps> = ({
   notes,
   isLoading,
   getNotesStart,
-  history
+  setNoteIdOnEdit
 }) => {
   useEffect(() => {
     getNotesStart();
-  }, []);
+  }, [getNotesStart]);
 
-  return <Main notes={notes} isLoading={isLoading} history={history} />;
+  useEffect(() => {
+    setNoteIdOnEdit(notes[0] ? notes[0].id : -1);
+  }, [setNoteIdOnEdit, notes]);
+
+  return (
+    <NoteTitlesList
+      notes={notes}
+      isLoading={isLoading}
+      setNoteIdOnEdit={setNoteIdOnEdit}
+    />
+  );
 };
 
 export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(MainContainer)
+  )(NoteTitlesListContainer)
 );
