@@ -1,19 +1,37 @@
 import React from "react";
-import { Note } from "../types";
 
 export interface NoteEditorProps {
-  note?: Note;
+  title: string;
+  body: string;
+  onChangeTitle: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeBody: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-const NoteEditor: React.FC<NoteEditorProps> = ({ note }) => {
+const NoteEditor: React.FC<NoteEditorProps> = ({
+  title,
+  body,
+  onChangeTitle,
+  onChangeBody,
+  onSubmit
+}) => {
   return (
     <div className="NoteEditor">
-      {note && (
-        <>
-          <h2>Title: {note.title}</h2>
-          <p>{note.body}</p>
-        </>
-      )}
+      <form onSubmit={onSubmit}>
+        <div>
+          <input
+            type="text"
+            value={title}
+            onChange={onChangeTitle}
+            required
+            pattern=".*\S+.*"
+          />
+        </div>
+        <div>
+          <textarea value={body} onChange={onChangeBody} />
+        </div>
+        <button type="submit">SAVE</button>
+      </form>
     </div>
   );
 };

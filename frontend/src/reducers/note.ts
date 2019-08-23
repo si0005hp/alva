@@ -19,6 +19,7 @@ export const initialState: NoteState = {
 const noteReducer: Reducer<NoteState, NoteAction> =
     (state: NoteState = initialState, action: NoteAction): NoteState => {
       switch (action.type) {
+        /* GET_NOTES */
         case ActionType.GET_NOTES_START:
           return {...state, notes: [], isLoading: true};
         case ActionType.GET_NOTES_SUCCEED:
@@ -29,6 +30,17 @@ const noteReducer: Reducer<NoteState, NoteAction> =
           };
         case ActionType.GET_NOTES_FAIL:
           return {...state, isLoading: false, error: action.payload.error};
+
+        /* UPDATE_NOTE */
+        case ActionType.UPDATE_NOTE_START:
+          return state;
+        case ActionType.UPDATE_NOTE_SUCCEED:
+          return {
+            ...state,
+            notes: applyPatchToNotes(action.payload.result.note, state.notes)
+          };
+        case ActionType.UPDATE_NOTE_FAIL:
+          return state;
         default: {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const _: never = action;
@@ -41,3 +53,6 @@ export default noteReducer;
 
 export const selectNoteById = (state: NoteState, noteId: number) =>
     state.notes.find(note => note.id === noteId);
+
+const applyPatchToNotes = (updatedNote: Note, notes: Note[]) =>
+    notes.map(note => (note.id === updatedNote.id ? updatedNote : note));

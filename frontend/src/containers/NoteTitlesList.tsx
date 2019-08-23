@@ -18,9 +18,14 @@ interface DispatchProps {
   getNotesStart: () => void;
 }
 
+interface OwnProps {
+  noteIdOnEdit: number;
+}
+
 type EnhancedNoteTitlesListProps = NoteTitlesListProps &
   StateProps &
   DispatchProps &
+  OwnProps &
   RouteComponentProps<{}>;
 
 const mapStateToProps = (state: RootState): StateProps => ({
@@ -40,6 +45,7 @@ const NoteTitlesListContainer: FC<EnhancedNoteTitlesListProps> = ({
   notes,
   isLoading,
   getNotesStart,
+  noteIdOnEdit,
   setNoteIdOnEdit
 }) => {
   useEffect(() => {
@@ -47,7 +53,9 @@ const NoteTitlesListContainer: FC<EnhancedNoteTitlesListProps> = ({
   }, [getNotesStart]);
 
   useEffect(() => {
-    setNoteIdOnEdit(notes[0] ? notes[0].id : -1);
+    if (noteIdOnEdit === -1 && notes[0]) {
+      setNoteIdOnEdit(notes[0].id);
+    }
   }, [setNoteIdOnEdit, notes]);
 
   return (

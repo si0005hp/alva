@@ -7,9 +7,20 @@ module Api
       before_action :authenticate_user
 
       def index
-        render json: {
-          notes: current_user.notes
-        }
+        render json: { notes: current_user.notes }
+      end
+
+      def update
+        note.update!(note_params)
+        render json: { note: note }, status: :ok
+      end
+
+      def note
+        @note ||= Note.find(params[:id])
+      end
+
+      def note_params
+        params.permit(:id, :title, :body)
       end
     end
   end

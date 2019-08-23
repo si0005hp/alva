@@ -16,7 +16,10 @@ const Main: React.FC<RouteComponentProps<{}>> = ({ history }) => {
   return (
     <div className="Main">
       <NavHeader logout={logout} />
-      <NoteTitlesList setNoteIdOnEdit={setNoteIdOnEdit} />
+      <NoteTitlesList
+        noteIdOnEdit={noteIdOnEdit}
+        setNoteIdOnEdit={setNoteIdOnEdit}
+      />
       <NoteEditor noteIdOnEdit={noteIdOnEdit} />
     </div>
   );
