@@ -12,7 +12,6 @@ const NoteTitlesList: React.FC<NoteTitlesListProps> = ({
   isLoading = false,
   setNoteIdOnEdit
 }) => {
-  console.log(notes);
   return (
     <div className="NoteTitlesList">
       {isLoading ? (
