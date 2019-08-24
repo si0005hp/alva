@@ -1,6 +1,6 @@
 import {all, call, fork, put, takeLatest} from 'redux-saga/effects';
 
-import {getNotes, updateNote} from '../actions/note';
+import {getNotes, submitNote} from '../actions/note';
 import * as Action from '../actions/types';
 import api from '../api';
 import {Note} from '../types';
@@ -33,8 +33,8 @@ export function* watchGetNotes() {
   yield takeLatest(Action.GET_NOTES_START, runGetNotes);
 }
 
-/* UPDATE_NOTE */
-function* runUpdateNote(action: ReturnType<typeof updateNote.start>) {
+/* SUBMIT_NOTE */
+function* runSubmitNote(action: ReturnType<typeof submitNote.start>) {
   const apiCall = async (note: Note) => {
     try {
       const res = await api.patch(`/api/v1/notes/${note.id}`, note);
@@ -49,16 +49,16 @@ function* runUpdateNote(action: ReturnType<typeof updateNote.start>) {
 
   try {
     const note = yield call(apiCall, action.payload.note);
-    yield put(updateNote.succeed({note: action.payload.note}, {note}));
+    yield put(submitNote.succeed({note: action.payload.note}, {note}));
   } catch (err) {
-    yield put(updateNote.fail({note: action.payload.note}, err));
+    yield put(submitNote.fail({note: action.payload.note}, err));
   }
 }
 
-export function* watchUpdateNote() {
-  yield takeLatest(Action.UPDATE_NOTE_START, runUpdateNote);
+export function* watchSubmitNote() {
+  yield takeLatest(Action.SUBMIT_NOTE_START, runSubmitNote);
 }
 
 export default function* rootSaga() {
-  yield all([fork(watchGetNotes), fork(watchUpdateNote)]);
+  yield all([fork(watchGetNotes), fork(watchSubmitNote)]);
 }

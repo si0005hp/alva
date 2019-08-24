@@ -5,14 +5,14 @@ import { RootState } from "../reducers";
 import NoteEditor from "../components/NoteEditor";
 import { Note } from "../types/index";
 import { bindActionCreators, Dispatch } from "redux";
-import { updateNote } from "../actions/note";
+import { submitNote } from "../actions/note";
 
 interface StateProps {
   note?: Note;
 }
 
 interface DispatchProps {
-  updateNoteStart: (note: Note) => void;
+  submitNoteStart: (note: Note) => void;
 }
 
 interface OwnProps {
@@ -31,29 +31,29 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => ({
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps =>
   bindActionCreators(
     {
-      updateNoteStart: (note: Note) => updateNote.start({ note })
+      submitNoteStart: (note: Note) => submitNote.start({ note })
     },
     dispatch
   );
 
 const NoteEditorContainerWrapper: FC<EnhancedNoteEditorProps> = ({
   note,
-  updateNoteStart
+  submitNoteStart
 }) =>
   note ? (
-    <NoteEditorContainer note={note} updateNoteStart={updateNoteStart} />
+    <NoteEditorContainer note={note} submitNoteStart={submitNoteStart} />
   ) : (
     <></>
   );
 
 interface NoteEditorContainerProps {
   note: Note;
-  updateNoteStart: (note: Note) => void;
+  submitNoteStart: (note: Note) => void;
 }
 
 const NoteEditorContainer: FC<NoteEditorContainerProps> = ({
   note,
-  updateNoteStart
+  submitNoteStart
 }) => {
   const [title, setTitle] = useState(note.title);
   const [body, setBody] = useState(note.body);
@@ -69,7 +69,7 @@ const NoteEditorContainer: FC<NoteEditorContainerProps> = ({
     setBody(e.target.value.trim());
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    updateNoteStart({ id: note.id, title, body });
+    submitNoteStart({ id: note.id, title, body });
   };
 
   return (

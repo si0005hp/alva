@@ -31,15 +31,15 @@ const noteReducer: Reducer<NoteState, NoteAction> =
         case ActionType.GET_NOTES_FAIL:
           return {...state, isLoading: false, error: action.payload.error};
 
-        /* UPDATE_NOTE */
-        case ActionType.UPDATE_NOTE_START:
+        /* SUBMIT_NOTE */
+        case ActionType.SUBMIT_NOTE_START:
           return state;
-        case ActionType.UPDATE_NOTE_SUCCEED:
+        case ActionType.SUBMIT_NOTE_SUCCEED:
           return {
             ...state,
             notes: applyPatchToNotes(action.payload.result.note, state.notes)
           };
-        case ActionType.UPDATE_NOTE_FAIL:
+        case ActionType.SUBMIT_NOTE_FAIL:
           return state;
 
         /* NEW_EMPTY_NOTE */

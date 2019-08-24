@@ -23,27 +23,27 @@ export const getNotes = {
   })
 };
 
-/* UPDATE_NOTE */
-interface UpdateNoteParams {
+/* SUBMIT_NOTE */
+interface SubmitNoteParams {
   note: Note;
 }
 
-interface UpdateNoteResult {
+interface SubmitNoteResult {
   note: Note;
 }
 
-export const updateNote = {
-  start: (params: UpdateNoteParams) => ({
-    type: ActionType.UPDATE_NOTE_START as typeof ActionType.UPDATE_NOTE_START,
+export const submitNote = {
+  start: (params: SubmitNoteParams) => ({
+    type: ActionType.SUBMIT_NOTE_START as typeof ActionType.SUBMIT_NOTE_START,
     payload: params
   }),
-  succeed: (params: UpdateNoteParams, result: UpdateNoteResult) => ({
-    type: ActionType.UPDATE_NOTE_SUCCEED as
-        typeof ActionType.UPDATE_NOTE_SUCCEED,
+  succeed: (params: SubmitNoteParams, result: SubmitNoteResult) => ({
+    type: ActionType.SUBMIT_NOTE_SUCCEED as
+        typeof ActionType.SUBMIT_NOTE_SUCCEED,
     payload: {params, result}
   }),
-  fail: (params: UpdateNoteParams, error: AxiosError) => ({
-    type: ActionType.UPDATE_NOTE_FAIL as typeof ActionType.UPDATE_NOTE_FAIL,
+  fail: (params: SubmitNoteParams, error: AxiosError) => ({
+    type: ActionType.SUBMIT_NOTE_FAIL as typeof ActionType.SUBMIT_NOTE_FAIL,
     payload: {params, error},
     error: true
   })
@@ -57,5 +57,5 @@ export const newEmptyNote = () => ({
 
 export type NoteAction =|ReturnType<typeof getNotes.start>|
     ReturnType<typeof getNotes.succeed>|ReturnType<typeof getNotes.fail>|
-    ReturnType<typeof updateNote.start>|ReturnType<typeof updateNote.succeed>|
-    ReturnType<typeof updateNote.fail>|ReturnType<typeof newEmptyNote>;
+    ReturnType<typeof submitNote.start>|ReturnType<typeof submitNote.succeed>|
+    ReturnType<typeof submitNote.fail>|ReturnType<typeof newEmptyNote>;
