@@ -24,7 +24,13 @@ export const getNotes = {
 };
 
 /* SUBMIT_NOTE */
+export enum SubmitType {
+  CREATE,
+  UPDATE
+}
+
 interface SubmitNoteParams {
+  submitType: SubmitType;
   note: Note;
 }
 

@@ -5,14 +5,14 @@ import { RootState } from "../reducers";
 import NoteEditor from "../components/NoteEditor";
 import { Note } from "../types/index";
 import { bindActionCreators, Dispatch } from "redux";
-import { submitNote, editNote } from "../actions/note";
+import { submitNote, editNote, SubmitType } from "../actions/note";
 
 interface StateProps {
   note?: Note;
 }
 
 interface DispatchProps {
-  submitNoteStart: (note: Note) => void;
+  submitNoteStart: (submitType: SubmitType, note: Note) => void;
   editNote: (note: Note) => void;
 }
 
@@ -35,7 +35,8 @@ const mapDispatchToProps = (
 ): DispatchProps =>
   bindActionCreators(
     {
-      submitNoteStart: (note: Note) => submitNote.start({ note }),
+      submitNoteStart: (submitType: SubmitType, note: Note) =>
+        submitNote.start({ submitType, note }),
       editNote: (note: Note) =>
         editNote({ noteIdxOnEdit: ownProps.noteIdxOnEdit, note })
     },
@@ -69,12 +70,17 @@ const NoteEditorContainer: FC<NoteEditorContainerProps> = ({
   editNote
 }) => {
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) =>
-    editNote({ ...note, title: e.target.value.trim() });
+    editNote({ ...note, title: e.target.value });
+
   const onChangeBody = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
-    editNote({ ...note, body: e.target.value.trim() });
+    editNote({ ...note, body: e.target.value });
+
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    submitNoteStart(note);
+    submitNoteStart(
+      note.id === -1 ? SubmitType.CREATE : SubmitType.UPDATE,
+      note
+    );
   };
 
   return (

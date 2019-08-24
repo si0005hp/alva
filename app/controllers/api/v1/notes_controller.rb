@@ -15,6 +15,15 @@ module Api
         render json: { note: note }, status: :ok
       end
 
+      def create
+        note = Note.create!(title: note_params[:title],
+                            body: note_params[:body],
+                            user: current_user)
+        render json: { note: note }, status: :ok
+      end
+
+      private
+
       def note
         @note ||= Note.find(params[:id])
       end

@@ -1,6 +1,6 @@
 import {all, call, fork, put, takeLatest} from 'redux-saga/effects';
 
-import {getNotes, submitNote} from '../actions/note';
+import {getNotes, submitNote, SubmitType} from '../actions/note';
 import * as Action from '../actions/types';
 import api from '../api';
 import {Note} from '../types';
@@ -35,9 +35,13 @@ export function* watchGetNotes() {
 
 /* SUBMIT_NOTE */
 function* runSubmitNote(action: ReturnType<typeof submitNote.start>) {
-  const apiCall = async (note: Note) => {
+  const {submitType, note} = action.payload;
+
+  const apiCall = async (submitType: SubmitType, note: Note) => {
     try {
-      const res = await api.patch(`/api/v1/notes/${note.id}`, note);
+      const res = submitType === SubmitType.CREATE ?
+          await api.post('/api/v1/notes', note) :
+          await api.patch(`/api/v1/notes/${note.id}`, note);
       if (res.status !== 200) {
         throw new Error('Server Error');
       }
@@ -48,10 +52,10 @@ function* runSubmitNote(action: ReturnType<typeof submitNote.start>) {
   };
 
   try {
-    const note = yield call(apiCall, action.payload.note);
-    yield put(submitNote.succeed({note: action.payload.note}, {note}));
+    const resNote = yield call(apiCall, submitType, note);
+    yield put(submitNote.succeed({submitType, note}, {note: resNote}));
   } catch (err) {
-    yield put(submitNote.fail({note: action.payload.note}, err));
+    yield put(submitNote.fail({submitType, note}, err));
   }
 }
 
