@@ -1,11 +1,11 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { connect } from "react-redux";
 import { RootState } from "../reducers";
 import NoteEditor from "../components/NoteEditor";
 import { Note } from "../types/index";
 import { bindActionCreators, Dispatch } from "redux";
-import { submitNote } from "../actions/note";
+import { submitNote, editNote } from "../actions/note";
 
 interface StateProps {
   note?: Note;
@@ -13,6 +13,7 @@ interface StateProps {
 
 interface DispatchProps {
   submitNoteStart: (note: Note) => void;
+  editNote: (note: Note) => void;
 }
 
 interface OwnProps {
@@ -28,54 +29,58 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => ({
   note: state.note.notes[ownProps.noteIdxOnEdit]
 });
 
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps =>
+const mapDispatchToProps = (
+  dispatch: Dispatch,
+  ownProps: OwnProps
+): DispatchProps =>
   bindActionCreators(
     {
-      submitNoteStart: (note: Note) => submitNote.start({ note })
+      submitNoteStart: (note: Note) => submitNote.start({ note }),
+      editNote: (note: Note) =>
+        editNote({ noteIdxOnEdit: ownProps.noteIdxOnEdit, note })
     },
     dispatch
   );
 
 const NoteEditorContainerWrapper: FC<EnhancedNoteEditorProps> = ({
   note,
-  submitNoteStart
+  submitNoteStart,
+  editNote
 }) =>
   note ? (
-    <NoteEditorContainer note={note} submitNoteStart={submitNoteStart} />
+    <NoteEditorContainer
+      note={note}
+      submitNoteStart={submitNoteStart}
+      editNote={editNote}
+    />
   ) : (
     <></>
   );
 
-interface NoteEditorContainerProps {
+interface HasNote {
   note: Note;
-  submitNoteStart: (note: Note) => void;
 }
+
+type NoteEditorContainerProps = HasNote & DispatchProps;
 
 const NoteEditorContainer: FC<NoteEditorContainerProps> = ({
   note,
-  submitNoteStart
+  submitNoteStart,
+  editNote
 }) => {
-  const [title, setTitle] = useState(note.title);
-  const [body, setBody] = useState(note.body);
-
-  useEffect(() => {
-    setTitle(note.title);
-    setBody(note.body);
-  }, [note]);
-
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setTitle(e.target.value.trim());
+    editNote({ ...note, title: e.target.value.trim() });
   const onChangeBody = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
-    setBody(e.target.value.trim());
+    editNote({ ...note, body: e.target.value.trim() });
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    submitNoteStart({ id: note.id, title, body });
+    submitNoteStart(note);
   };
 
   return (
     <NoteEditor
-      title={title}
-      body={body}
+      title={note.title}
+      body={note.body}
       onChangeTitle={onChangeTitle}
       onChangeBody={onChangeBody}
       onSubmit={onSubmit}

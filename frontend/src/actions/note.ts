@@ -53,9 +53,21 @@ export const submitNote = {
 export const newEmptyNote = () => ({
   type: ActionType.NEW_EMPTY_NOTE as typeof ActionType.NEW_EMPTY_NOTE,
   payload: {}
-})
+});
 
-export type NoteAction =|ReturnType<typeof getNotes.start>|
-    ReturnType<typeof getNotes.succeed>|ReturnType<typeof getNotes.fail>|
-    ReturnType<typeof submitNote.start>|ReturnType<typeof submitNote.succeed>|
-    ReturnType<typeof submitNote.fail>|ReturnType<typeof newEmptyNote>;
+/* EDIT_NOTE */
+interface EditNoteParams {
+  noteIdxOnEdit: number;
+  note: Note;
+}
+
+export const editNote = (params: EditNoteParams) => ({
+  type: ActionType.EDIT_NOTE as typeof ActionType.EDIT_NOTE,
+  payload: {params}
+});
+
+export type NoteAction =
+    |ReturnType<typeof getNotes.start>|ReturnType<typeof getNotes.succeed>|
+    ReturnType<typeof getNotes.fail>|ReturnType<typeof submitNote.start>|
+    ReturnType<typeof submitNote.succeed>|ReturnType<typeof submitNote.fail>|
+    ReturnType<typeof newEmptyNote>|ReturnType<typeof editNote>;

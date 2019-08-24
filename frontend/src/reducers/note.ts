@@ -37,7 +37,8 @@ const noteReducer: Reducer<NoteState, NoteAction> =
         case ActionType.SUBMIT_NOTE_SUCCEED:
           return {
             ...state,
-            notes: applyPatchToNotes(action.payload.result.note, state.notes)
+            notes:
+                applyPatchToNotesById(action.payload.result.note, state.notes)
           };
         case ActionType.SUBMIT_NOTE_FAIL:
           return state;
@@ -46,6 +47,14 @@ const noteReducer: Reducer<NoteState, NoteAction> =
         case ActionType.NEW_EMPTY_NOTE:
           return {
             ...state, notes: [createEmptyNote(), ...state.notes]
+          }
+
+        /* EDIT_NOTE */
+        case ActionType.EDIT_NOTE:
+          const {noteIdxOnEdit, note} = action.payload.params;
+          return {
+            ...state,
+                notes: applyPatchToNoteByIdx(note, noteIdxOnEdit, state.notes)
           }
         default: {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -57,7 +66,11 @@ const noteReducer: Reducer<NoteState, NoteAction> =
 
 export default noteReducer;
 
-const applyPatchToNotes = (updatedNote: Note, notes: Note[]) =>
+const applyPatchToNotesById = (updatedNote: Note, notes: Note[]) =>
     notes.map(note => (note.id === updatedNote.id ? updatedNote : note));
+
+const applyPatchToNoteByIdx =
+    (updatedNote: Note, updatedNoteIdx: number, notes: Note[]) =>
+        notes.map((note, idx) => (idx === updatedNoteIdx ? updatedNote : note));
 
 const createEmptyNote = (): Note => ({id: -1, title: '', body: ''})

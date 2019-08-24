@@ -8,3 +8,5 @@ export const SUBMIT_NOTE_SUCCEED = 'SUBMIT_NOTE_SUCCEED';
 export const SUBMIT_NOTE_FAIL = 'SUBMIT_NOTE_FAIL';
 /* NEW_EMPTY_NOTE */
 export const NEW_EMPTY_NOTE = 'NEW_EMPTY_NOTE';
+/* EDIT_NOTE */
+export const EDIT_NOTE = 'EDIT_NOTE';
