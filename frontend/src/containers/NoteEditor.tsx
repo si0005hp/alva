@@ -6,6 +6,7 @@ import NoteEditor from "../components/NoteEditor";
 import { Note } from "../types/index";
 import { bindActionCreators, Dispatch } from "redux";
 import { submitNote, editNote, SubmitType } from "../actions/note";
+import { NONE_ID } from "../const";
 
 interface StateProps {
   note?: Note;
@@ -78,7 +79,7 @@ const NoteEditorContainer: FC<NoteEditorContainerProps> = ({
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     submitNoteStart(
-      note.id === -1 ? SubmitType.CREATE : SubmitType.UPDATE,
+      note.id === NONE_ID ? SubmitType.CREATE : SubmitType.UPDATE,
       note
     );
   };

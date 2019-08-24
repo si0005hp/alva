@@ -5,6 +5,8 @@ import {NoteAction} from '../actions/note';
 import * as ActionType from '../actions/types';
 import {Note} from '../types';
 
+import {NONE_ID} from './../const';
+
 export interface NoteState {
   notes: Note[];
   isLoading: boolean;
@@ -73,4 +75,4 @@ const applyPatchToNoteByIdx =
     (updatedNote: Note, updatedNoteIdx: number, notes: Note[]) =>
         notes.map((note, idx) => (idx === updatedNoteIdx ? updatedNote : note));
 
-const createEmptyNote = (): Note => ({id: -1, title: '', body: ''})
+const createEmptyNote = (): Note => ({id: NONE_ID, title: '', body: ''})

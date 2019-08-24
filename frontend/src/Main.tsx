@@ -3,9 +3,10 @@ import NoteTitlesList from "./containers/NoteTitlesList";
 import { RouteComponentProps } from "react-router";
 import NoteEditor from "./containers/NoteEditor";
 import NavHeader from "./containers/NavHeader";
+import { NONE_ID } from "./const";
 
 const Main: React.FC<RouteComponentProps<{}>> = () => {
-  const [noteIdxOnEdit, setNoteIdxOnEdit] = useState(-1);
+  const [noteIdxOnEdit, setNoteIdxOnEdit] = useState(NONE_ID);
 
   return (
     <div className="Main">

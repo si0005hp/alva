@@ -8,6 +8,7 @@ import { RootState } from "../reducers";
 import NoteTitlesList, {
   NoteTitlesListProps
 } from "../components/NoteTitlesList";
+import { NONE_ID } from "../const";
 
 interface StateProps {
   notes: Note[];
@@ -53,7 +54,7 @@ const NoteTitlesListContainer: FC<EnhancedNoteTitlesListProps> = ({
   }, [getNotesStart]);
 
   useEffect(() => {
-    if (noteIdxOnEdit === -1 && notes[0]) {
+    if (noteIdxOnEdit === NONE_ID && notes[0]) {
       setNoteIdxOnEdit(notes[0].id);
     }
   }, [setNoteIdxOnEdit, noteIdxOnEdit, notes]);
