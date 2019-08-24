@@ -57,9 +57,6 @@ const noteReducer: Reducer<NoteState, NoteAction> =
 
 export default noteReducer;
 
-export const selectNoteById = (state: NoteState, noteId: number) =>
-    state.notes.find(note => note.id === noteId);
-
 const applyPatchToNotes = (updatedNote: Note, notes: Note[]) =>
     notes.map(note => (note.id === updatedNote.id ? updatedNote : note));
 

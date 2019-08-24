@@ -3,7 +3,6 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { connect } from "react-redux";
 import { RootState } from "../reducers";
 import NoteEditor from "../components/NoteEditor";
-import { selectNoteById } from "../reducers/note";
 import { Note } from "../types/index";
 import { bindActionCreators, Dispatch } from "redux";
 import { updateNote } from "../actions/note";
@@ -17,7 +16,7 @@ interface DispatchProps {
 }
 
 interface OwnProps {
-  noteIdOnEdit: number;
+  noteIdxOnEdit: number;
 }
 
 type EnhancedNoteEditorProps = StateProps &
@@ -26,7 +25,7 @@ type EnhancedNoteEditorProps = StateProps &
   RouteComponentProps<{}>;
 
 const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => ({
-  note: selectNoteById(state.note, ownProps.noteIdOnEdit)
+  note: state.note.notes[ownProps.noteIdxOnEdit]
 });
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps =>

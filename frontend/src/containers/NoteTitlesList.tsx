@@ -19,7 +19,7 @@ interface DispatchProps {
 }
 
 interface OwnProps {
-  noteIdOnEdit: number;
+  noteIdxOnEdit: number;
 }
 
 type EnhancedNoteTitlesListProps = NoteTitlesListProps &
@@ -45,24 +45,24 @@ const NoteTitlesListContainer: FC<EnhancedNoteTitlesListProps> = ({
   notes,
   isLoading,
   getNotesStart,
-  noteIdOnEdit,
-  setNoteIdOnEdit
+  noteIdxOnEdit,
+  setNoteIdxOnEdit
 }) => {
   useEffect(() => {
     getNotesStart();
   }, [getNotesStart]);
 
   useEffect(() => {
-    if (noteIdOnEdit === -1 && notes[0]) {
-      setNoteIdOnEdit(notes[0].id);
+    if (noteIdxOnEdit === -1 && notes[0]) {
+      setNoteIdxOnEdit(notes[0].id);
     }
-  }, [setNoteIdOnEdit, noteIdOnEdit, notes]);
+  }, [setNoteIdxOnEdit, noteIdxOnEdit, notes]);
 
   return (
     <NoteTitlesList
       notes={notes}
       isLoading={isLoading}
-      setNoteIdOnEdit={setNoteIdOnEdit}
+      setNoteIdxOnEdit={setNoteIdxOnEdit}
     />
   );
 };

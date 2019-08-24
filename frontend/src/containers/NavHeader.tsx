@@ -11,7 +11,7 @@ interface DispatchProps {
 }
 
 interface OwnProps {
-  setNoteIdOnEdit: (id: number) => void;
+  setNoteIdxOnEdit: (id: number) => void;
 }
 
 type EnhancedNavHeaderProps = DispatchProps &
@@ -29,7 +29,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps =>
 const NavHeaderContainer: FC<EnhancedNavHeaderProps> = ({
   history,
   newEmptyNote,
-  setNoteIdOnEdit
+  setNoteIdxOnEdit
 }) => {
   const logout = () => {
     auth0.logout();
@@ -38,7 +38,7 @@ const NavHeaderContainer: FC<EnhancedNavHeaderProps> = ({
 
   const newNote = () => {
     newEmptyNote();
-    // setNoteIdOnEdit(0); TODO
+    setNoteIdxOnEdit(0);
   };
 
   return <NavHeader onClickLogout={logout} onClickNew={newNote} />;

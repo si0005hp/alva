@@ -5,16 +5,16 @@ import NoteEditor from "./containers/NoteEditor";
 import NavHeader from "./containers/NavHeader";
 
 const Main: React.FC<RouteComponentProps<{}>> = () => {
-  const [noteIdOnEdit, setNoteIdOnEdit] = useState(-1);
+  const [noteIdxOnEdit, setNoteIdxOnEdit] = useState(-1);
 
   return (
     <div className="Main">
-      <NavHeader setNoteIdOnEdit={setNoteIdOnEdit} />
+      <NavHeader setNoteIdxOnEdit={setNoteIdxOnEdit} />
       <NoteTitlesList
-        noteIdOnEdit={noteIdOnEdit}
-        setNoteIdOnEdit={setNoteIdOnEdit}
+        noteIdxOnEdit={noteIdxOnEdit}
+        setNoteIdxOnEdit={setNoteIdxOnEdit}
       />
-      <NoteEditor noteIdOnEdit={noteIdOnEdit} />
+      <NoteEditor noteIdxOnEdit={noteIdxOnEdit} />
     </div>
   );
 };
