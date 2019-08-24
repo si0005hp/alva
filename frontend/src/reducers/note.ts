@@ -41,6 +41,12 @@ const noteReducer: Reducer<NoteState, NoteAction> =
           };
         case ActionType.UPDATE_NOTE_FAIL:
           return state;
+
+        /* NEW_EMPTY_NOTE */
+        case ActionType.NEW_EMPTY_NOTE:
+          return {
+            ...state, notes: [createEmptyNote(), ...state.notes]
+          }
         default: {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const _: never = action;
@@ -56,3 +62,5 @@ export const selectNoteById = (state: NoteState, noteId: number) =>
 
 const applyPatchToNotes = (updatedNote: Note, notes: Note[]) =>
     notes.map(note => (note.id === updatedNote.id ? updatedNote : note));
+
+const createEmptyNote = (): Note => ({id: -1, title: '', body: ''})

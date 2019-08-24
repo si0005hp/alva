@@ -56,7 +56,7 @@ const NoteTitlesListContainer: FC<EnhancedNoteTitlesListProps> = ({
     if (noteIdOnEdit === -1 && notes[0]) {
       setNoteIdOnEdit(notes[0].id);
     }
-  }, [setNoteIdOnEdit, notes]);
+  }, [setNoteIdOnEdit, noteIdOnEdit, notes]);
 
   return (
     <NoteTitlesList

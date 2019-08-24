@@ -5,6 +5,7 @@ import * as Action from '../actions/types';
 import api from '../api';
 import {Note} from '../types';
 
+/* GET_NOTES */
 function* runGetNotes(action: ReturnType<typeof getNotes.start>) {
   const apiCall = async () => {
     try {
@@ -32,6 +33,7 @@ export function* watchGetNotes() {
   yield takeLatest(Action.GET_NOTES_START, runGetNotes);
 }
 
+/* UPDATE_NOTE */
 function* runUpdateNote(action: ReturnType<typeof updateNote.start>) {
   const apiCall = async (note: Note) => {
     try {

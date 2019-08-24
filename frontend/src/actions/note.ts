@@ -2,6 +2,7 @@ import {AxiosError} from 'axios';
 import {Note} from '../types';
 import * as ActionType from './types';
 
+/* GET_NOTES */
 interface GetNotesResult {
   notes: Note[];
 }
@@ -22,6 +23,7 @@ export const getNotes = {
   })
 };
 
+/* UPDATE_NOTE */
 interface UpdateNoteParams {
   note: Note;
 }
@@ -47,7 +49,13 @@ export const updateNote = {
   })
 };
 
-export type NoteAction =
-    |ReturnType<typeof getNotes.start>|ReturnType<typeof getNotes.succeed>|
-    ReturnType<typeof getNotes.fail>|ReturnType<typeof updateNote.start>|
-    ReturnType<typeof updateNote.succeed>|ReturnType<typeof updateNote.fail>;
+/* NEW_EMPTY_NOTE */
+export const newEmptyNote = () => ({
+  type: ActionType.NEW_EMPTY_NOTE as typeof ActionType.NEW_EMPTY_NOTE,
+  payload: {}
+})
+
+export type NoteAction =|ReturnType<typeof getNotes.start>|
+    ReturnType<typeof getNotes.succeed>|ReturnType<typeof getNotes.fail>|
+    ReturnType<typeof updateNote.start>|ReturnType<typeof updateNote.succeed>|
+    ReturnType<typeof updateNote.fail>|ReturnType<typeof newEmptyNote>;
