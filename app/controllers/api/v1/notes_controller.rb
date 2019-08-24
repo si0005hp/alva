@@ -7,7 +7,7 @@ module Api
       before_action :authenticate_user
 
       def index
-        render json: { notes: current_user.notes }
+        render json: { notes: current_user.notes.order('updated_at DESC') }
       end
 
       def update
