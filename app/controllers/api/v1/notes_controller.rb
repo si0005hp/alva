@@ -22,6 +22,11 @@ module Api
         render json: { note: note }, status: :ok
       end
 
+      def destroy
+        note.destroy!
+        render json: { note: note }, status: :ok
+      end
+
       private
 
       def note

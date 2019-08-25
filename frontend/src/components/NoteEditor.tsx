@@ -6,6 +6,9 @@ export interface NoteEditorProps {
   onChangeTitle: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeBody: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onClickDelete: (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => void;
 }
 
 const NoteEditor: React.FC<NoteEditorProps> = ({
@@ -13,7 +16,8 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
   body,
   onChangeTitle,
   onChangeBody,
-  onSubmit
+  onSubmit,
+  onClickDelete
 }) => {
   return (
     <div className="NoteEditor">
@@ -32,6 +36,7 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
         </div>
         <button type="submit">SAVE</button>
       </form>
+      <button onClick={onClickDelete}>DELETE</button>
     </div>
   );
 };

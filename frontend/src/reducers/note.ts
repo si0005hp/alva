@@ -1,16 +1,14 @@
-import {AxiosError} from 'axios';
-import {Reducer} from 'redux';
-
-import {NoteAction} from '../actions/note';
-import * as ActionType from '../actions/types';
-import {Note} from '../types';
-
-import {NONE_ID} from './../const';
+import { AxiosError } from "axios";
+import { Reducer } from "redux";
+import { NoteAction } from "../actions/note";
+import * as ActionType from "../actions/types";
+import { Note } from "../types";
+import { NONE_ID } from "./../const";
 
 export interface NoteState {
   notes: Note[];
   isLoading: boolean;
-  error?: AxiosError|null;
+  error?: AxiosError | null;
 }
 
 export const initialState: NoteState = {
@@ -18,61 +16,79 @@ export const initialState: NoteState = {
   isLoading: false
 };
 
-const noteReducer: Reducer<NoteState, NoteAction> =
-    (state: NoteState = initialState, action: NoteAction): NoteState => {
-      switch (action.type) {
-        /* GET_NOTES */
-        case ActionType.GET_NOTES_START:
-          return {...state, notes: [], isLoading: true};
-        case ActionType.GET_NOTES_SUCCEED:
-          return {
-            ...state,
-            notes: action.payload.result.notes,
-            isLoading: false
-          };
-        case ActionType.GET_NOTES_FAIL:
-          return {...state, isLoading: false, error: action.payload.error};
+const noteReducer: Reducer<NoteState, NoteAction> = (
+  state: NoteState = initialState,
+  action: NoteAction
+): NoteState => {
+  switch (action.type) {
+    /* GET_NOTES */
+    case ActionType.GET_NOTES_START:
+      return { ...state, notes: [], isLoading: true };
+    case ActionType.GET_NOTES_SUCCEED:
+      return {
+        ...state,
+        notes: action.payload.result.notes,
+        isLoading: false
+      };
+    case ActionType.GET_NOTES_FAIL:
+      return { ...state, isLoading: false, error: action.payload.error };
 
-        /* SUBMIT_NOTE */
-        case ActionType.SUBMIT_NOTE_START:
-          return state;
-        case ActionType.SUBMIT_NOTE_SUCCEED:
-          return {
-            ...state,
-            notes:
-                applyPatchToNotesById(action.payload.result.note, state.notes)
-          };
-        case ActionType.SUBMIT_NOTE_FAIL:
-          return state;
+    /* SUBMIT_NOTE */
+    case ActionType.SUBMIT_NOTE_START:
+      return state;
+    case ActionType.SUBMIT_NOTE_SUCCEED:
+      return {
+        ...state,
+        notes: applyPatchToNotesById(action.payload.result.note, state.notes)
+      };
+    case ActionType.SUBMIT_NOTE_FAIL:
+      return state;
 
-        /* NEW_EMPTY_NOTE */
-        case ActionType.NEW_EMPTY_NOTE:
-          return {
-            ...state, notes: [createEmptyNote(), ...state.notes]
-          }
+    /* NEW_EMPTY_NOTE */
+    case ActionType.NEW_EMPTY_NOTE:
+      return {
+        ...state,
+        notes: [createEmptyNote(), ...state.notes]
+      };
 
-        /* EDIT_NOTE */
-        case ActionType.EDIT_NOTE:
-          const {noteIdxOnEdit, note} = action.payload.params;
-          return {
-            ...state,
-                notes: applyPatchToNotesByIdx(note, noteIdxOnEdit, state.notes)
-          }
-        default: {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const _: never = action;
-          return state;
-        }
-      }
-    };
+    /* EDIT_NOTE */
+    case ActionType.EDIT_NOTE:
+      const { noteIdxOnEdit, note } = action.payload.params;
+      return {
+        ...state,
+        notes: applyPatchToNotesByIdx(note, noteIdxOnEdit, state.notes)
+      };
+
+    /* DELETE_NOTE */
+    case ActionType.DELETE_NOTE_START:
+      return state;
+    case ActionType.DELETE_NOTE_SUCCEED:
+      return {
+        ...state,
+        notes: deleteNoteById(action.payload.result.note.id, state.notes)
+      };
+    case ActionType.DELETE_NOTE_FAIL:
+      return state;
+    default: {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const _: never = action;
+      return state;
+    }
+  }
+};
 
 export default noteReducer;
 
 const applyPatchToNotesById = (updatedNote: Note, notes: Note[]) =>
-    notes.map(note => (note.id === updatedNote.id ? updatedNote : note));
+  notes.map(note => (note.id === updatedNote.id ? updatedNote : note));
 
-const applyPatchToNotesByIdx =
-    (updatedNote: Note, updatedNoteIdx: number, notes: Note[]) =>
-        notes.map((note, idx) => (idx === updatedNoteIdx ? updatedNote : note));
+const applyPatchToNotesByIdx = (
+  updatedNote: Note,
+  updatedNoteIdx: number,
+  notes: Note[]
+) => notes.map((note, idx) => (idx === updatedNoteIdx ? updatedNote : note));
 
-const createEmptyNote = (): Note => ({id: NONE_ID, title: '', body: ''})
+const deleteNoteById = (noteId: number, notes: Note[]) =>
+  notes.filter(note => note.id !== noteId);
+
+const createEmptyNote = (): Note => ({ id: NONE_ID, title: "", body: "" });

@@ -5,7 +5,7 @@ import { RootState } from "../reducers";
 import NoteEditor from "../components/NoteEditor";
 import { Note } from "../types/index";
 import { bindActionCreators, Dispatch } from "redux";
-import { submitNote, editNote, SubmitType } from "../actions/note";
+import { submitNote, editNote, SubmitType, deleteNote } from "../actions/note";
 import { NONE_ID } from "../const";
 
 interface StateProps {
@@ -15,6 +15,7 @@ interface StateProps {
 interface DispatchProps {
   submitNoteStart: (submitType: SubmitType, note: Note) => void;
   editNote: (note: Note) => void;
+  deleteNoteStart: (noteId: number) => void;
 }
 
 interface OwnProps {
@@ -39,7 +40,8 @@ const mapDispatchToProps = (
       submitNoteStart: (submitType: SubmitType, note: Note) =>
         submitNote.start({ submitType, note }),
       editNote: (note: Note) =>
-        editNote({ noteIdxOnEdit: ownProps.noteIdxOnEdit, note })
+        editNote({ noteIdxOnEdit: ownProps.noteIdxOnEdit, note }),
+      deleteNoteStart: (noteId: number) => deleteNote.start({ noteId })
     },
     dispatch
   );
@@ -47,13 +49,15 @@ const mapDispatchToProps = (
 const NoteEditorContainerWrapper: FC<EnhancedNoteEditorProps> = ({
   note,
   submitNoteStart,
-  editNote
+  editNote,
+  deleteNoteStart
 }) =>
   note ? (
     <NoteEditorContainer
       note={note}
       submitNoteStart={submitNoteStart}
       editNote={editNote}
+      deleteNoteStart={deleteNoteStart}
     />
   ) : (
     <></>
@@ -68,7 +72,8 @@ type NoteEditorContainerProps = HasNote & DispatchProps;
 const NoteEditorContainer: FC<NoteEditorContainerProps> = ({
   note,
   submitNoteStart,
-  editNote
+  editNote,
+  deleteNoteStart
 }) => {
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) =>
     editNote({ ...note, title: e.target.value });
@@ -84,6 +89,12 @@ const NoteEditorContainer: FC<NoteEditorContainerProps> = ({
     );
   };
 
+  const onClickDelete = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    deleteNoteStart(note.id);
+  };
+
   return (
     <NoteEditor
       title={note.title}
@@ -91,6 +102,7 @@ const NoteEditorContainer: FC<NoteEditorContainerProps> = ({
       onChangeTitle={onChangeTitle}
       onChangeBody={onChangeBody}
       onSubmit={onSubmit}
+      onClickDelete={onClickDelete}
     />
   );
 };
