@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { connect } from "react-redux";
-import { RootState } from "../reducers";
 import NoteEditor from "../components/NoteEditor";
 import { Note } from "../types/index";
 import { bindActionCreators, Dispatch } from "redux";
@@ -14,10 +13,6 @@ import {
 } from "../actions/note";
 import { NONE_ID } from "../const";
 
-interface StateProps {
-  note?: Note;
-}
-
 interface DispatchProps {
   submitNote: (submitType: SubmitType, note: Note) => void;
   editNote: (note: Note) => void;
@@ -26,16 +21,12 @@ interface DispatchProps {
 
 interface OwnProps {
   noteIdxOnEdit: number;
+  note: Note;
 }
 
-type EnhancedNoteEditorProps = StateProps &
-  DispatchProps &
+type EnhancedNoteEditorProps = DispatchProps &
   OwnProps &
   RouteComponentProps<{}>;
-
-const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => ({
-  note: state.note.notes[ownProps.noteIdxOnEdit]
-});
 
 const mapDispatchToProps = (
   dispatch: Dispatch,
@@ -59,30 +50,7 @@ const mapDispatchToProps = (
     dispatch
   );
 
-const NoteEditorContainerWrapper: FC<EnhancedNoteEditorProps> = ({
-  note,
-  submitNote,
-  editNote,
-  deleteNote
-}) =>
-  note ? (
-    <NoteEditorContainer
-      note={note}
-      submitNote={submitNote}
-      editNote={editNote}
-      deleteNote={deleteNote}
-    />
-  ) : (
-    <></>
-  );
-
-interface HasNote {
-  note: Note;
-}
-
-type NoteEditorContainerProps = HasNote & DispatchProps;
-
-const NoteEditorContainer: FC<NoteEditorContainerProps> = ({
+const NoteEditorContainer: FC<EnhancedNoteEditorProps> = ({
   note,
   submitNote,
   editNote,
@@ -122,7 +90,7 @@ const NoteEditorContainer: FC<NoteEditorContainerProps> = ({
 
 export default withRouter(
   connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
-  )(NoteEditorContainerWrapper)
+  )(NoteEditorContainer)
 );

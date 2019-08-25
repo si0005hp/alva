@@ -1,11 +1,24 @@
 import React, { useState } from "react";
 import NoteTitlesList from "./containers/NoteTitlesList";
-import { RouteComponentProps } from "react-router";
+import { RouteComponentProps, withRouter } from "react-router";
 import NoteEditor from "./containers/NoteEditor";
 import NavHeader from "./containers/NavHeader";
 import { NONE_ID } from "./const";
+import { connect } from "react-redux";
+import { RootState } from "./reducers/index";
+import { Note } from "./types/index";
 
-const Main: React.FC<RouteComponentProps<{}>> = () => {
+interface StateProps {
+  notes: Note[];
+}
+
+type MainProps = StateProps & RouteComponentProps<{}>;
+
+const mapStateToProps = (state: RootState): StateProps => ({
+  notes: state.note.notes
+});
+
+const Main: React.FC<MainProps> = ({ notes }) => {
   const [noteIdxOnEdit, setNoteIdxOnEdit] = useState(NONE_ID);
 
   return (
@@ -15,9 +28,16 @@ const Main: React.FC<RouteComponentProps<{}>> = () => {
         noteIdxOnEdit={noteIdxOnEdit}
         setNoteIdxOnEdit={setNoteIdxOnEdit}
       />
-      <NoteEditor noteIdxOnEdit={noteIdxOnEdit} />
+      {notes[noteIdxOnEdit] && (
+        <NoteEditor noteIdxOnEdit={noteIdxOnEdit} note={notes[noteIdxOnEdit]} />
+      )}
     </div>
   );
 };
 
-export default Main;
+export default withRouter(
+  connect(
+    mapStateToProps,
+    null
+  )(Main)
+);
