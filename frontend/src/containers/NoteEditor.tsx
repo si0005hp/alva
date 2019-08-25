@@ -5,7 +5,13 @@ import { RootState } from "../reducers";
 import NoteEditor from "../components/NoteEditor";
 import { Note } from "../types/index";
 import { bindActionCreators, Dispatch } from "redux";
-import { submitNote, editNote, SubmitType, deleteNote } from "../actions/note";
+import {
+  submitNote,
+  editNote,
+  SubmitType,
+  deleteNote,
+  deleteUnsavedNote
+} from "../actions/note";
 import { NONE_ID } from "../const";
 
 interface StateProps {
@@ -13,9 +19,9 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  submitNoteStart: (submitType: SubmitType, note: Note) => void;
+  submitNote: (submitType: SubmitType, note: Note) => void;
   editNote: (note: Note) => void;
-  deleteNoteStart: (noteId: number) => void;
+  deleteNote: (note: Note) => void;
 }
 
 interface OwnProps {
@@ -37,27 +43,34 @@ const mapDispatchToProps = (
 ): DispatchProps =>
   bindActionCreators(
     {
-      submitNoteStart: (submitType: SubmitType, note: Note) =>
-        submitNote.start({ submitType, note }),
+      submitNote: (submitType: SubmitType, note: Note) =>
+        submitNote.start({
+          submitType,
+          noteIdxOnEdit: ownProps.noteIdxOnEdit,
+          note
+        }),
       editNote: (note: Note) =>
         editNote({ noteIdxOnEdit: ownProps.noteIdxOnEdit, note }),
-      deleteNoteStart: (noteId: number) => deleteNote.start({ noteId })
+      deleteNote: (note: Note) =>
+        note.id === NONE_ID
+          ? deleteUnsavedNote({ noteIdxOnEdit: ownProps.noteIdxOnEdit })
+          : deleteNote.start({ noteId: note.id })
     },
     dispatch
   );
 
 const NoteEditorContainerWrapper: FC<EnhancedNoteEditorProps> = ({
   note,
-  submitNoteStart,
+  submitNote,
   editNote,
-  deleteNoteStart
+  deleteNote
 }) =>
   note ? (
     <NoteEditorContainer
       note={note}
-      submitNoteStart={submitNoteStart}
+      submitNote={submitNote}
       editNote={editNote}
-      deleteNoteStart={deleteNoteStart}
+      deleteNote={deleteNote}
     />
   ) : (
     <></>
@@ -71,9 +84,9 @@ type NoteEditorContainerProps = HasNote & DispatchProps;
 
 const NoteEditorContainer: FC<NoteEditorContainerProps> = ({
   note,
-  submitNoteStart,
+  submitNote,
   editNote,
-  deleteNoteStart
+  deleteNote
 }) => {
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) =>
     editNote({ ...note, title: e.target.value });
@@ -83,16 +96,16 @@ const NoteEditorContainer: FC<NoteEditorContainerProps> = ({
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    submitNoteStart(
+    submitNote(
       note.id === NONE_ID ? SubmitType.CREATE : SubmitType.UPDATE,
       note
     );
   };
 
   const onClickDelete = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    _: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    deleteNoteStart(note.id);
+    deleteNote(note);
   };
 
   return (

@@ -1,3 +1,4 @@
+import { SubmitType } from "./../actions/note";
 import { AxiosError } from "axios";
 import { Reducer } from "redux";
 import { NoteAction } from "../actions/note";
@@ -37,9 +38,17 @@ const noteReducer: Reducer<NoteState, NoteAction> = (
     case ActionType.SUBMIT_NOTE_START:
       return state;
     case ActionType.SUBMIT_NOTE_SUCCEED:
+      const { params, result } = action.payload;
       return {
         ...state,
-        notes: applyPatchToNotesById(action.payload.result.note, state.notes)
+        notes:
+          params.submitType === SubmitType.CREATE
+            ? applyPatchToNotesByIdx(
+                result.note,
+                params.noteIdxOnEdit,
+                state.notes
+              )
+            : applyPatchToNotesById(result.note, state.notes)
       };
     case ActionType.SUBMIT_NOTE_FAIL:
       return state;
@@ -69,6 +78,13 @@ const noteReducer: Reducer<NoteState, NoteAction> = (
       };
     case ActionType.DELETE_NOTE_FAIL:
       return state;
+
+    /* DELETE_UNSAVED_NOTE */
+    case ActionType.DELETE_UNSAVED_NOTE:
+      return {
+        ...state,
+        notes: deleteNoteByIdx(action.payload.params.noteIdxOnEdit, state.notes)
+      };
     default: {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const _: never = action;
@@ -90,5 +106,8 @@ const applyPatchToNotesByIdx = (
 
 const deleteNoteById = (noteId: number, notes: Note[]) =>
   notes.filter(note => note.id !== noteId);
+
+const deleteNoteByIdx = (deletedNoteIdx: number, notes: Note[]) =>
+  notes.filter((_, idx) => idx !== deletedNoteIdx);
 
 const createEmptyNote = (): Note => ({ id: NONE_ID, title: "", body: "" });

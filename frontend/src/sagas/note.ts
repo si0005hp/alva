@@ -49,7 +49,7 @@ export function* watchGetNotes() {
 
 /* SUBMIT_NOTE */
 function* runSubmitNote(action: ReturnType<typeof submitNote.start>) {
-  const { submitType, note } = action.payload;
+  const { submitType, noteIdxOnEdit, note } = action.payload;
 
   const apiCallback = getApiCallback(
     submitType === SubmitType.CREATE
@@ -60,9 +60,11 @@ function* runSubmitNote(action: ReturnType<typeof submitNote.start>) {
 
   try {
     const resNote = yield call(apiCallback);
-    yield put(submitNote.succeed({ submitType, note }, { note: resNote }));
+    yield put(
+      submitNote.succeed({ submitType, noteIdxOnEdit, note }, { note: resNote })
+    );
   } catch (err) {
-    yield put(submitNote.fail({ submitType, note }, err));
+    yield put(submitNote.fail({ submitType, noteIdxOnEdit, note }, err));
   }
 }
 

@@ -54,8 +54,8 @@ const NoteTitlesListContainer: FC<EnhancedNoteTitlesListProps> = ({
   }, [getNotesStart]);
 
   useEffect(() => {
-    if (noteIdxOnEdit === NONE_ID && notes.length > 0) {
-      setNoteIdxOnEdit(0);
+    if (!notes[noteIdxOnEdit]) {
+      setNoteIdxOnEdit(notes.length > 0 ? 0 : NONE_ID);
     }
   }, [setNoteIdxOnEdit, noteIdxOnEdit, notes]);
 

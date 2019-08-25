@@ -31,6 +31,7 @@ export enum SubmitType {
 
 interface SubmitNoteParams {
   submitType: SubmitType;
+  noteIdxOnEdit: number;
   note: Note;
 }
 
@@ -96,6 +97,16 @@ export const deleteNote = {
   })
 };
 
+/* DELETE_UNSAVED_NOTE */
+interface DeleteUnsavedNoteParams {
+  noteIdxOnEdit: number;
+}
+
+export const deleteUnsavedNote = (params: DeleteUnsavedNoteParams) => ({
+  type: ActionType.DELETE_UNSAVED_NOTE as typeof ActionType.DELETE_UNSAVED_NOTE,
+  payload: { params }
+});
+
 export type NoteAction =
   | ReturnType<typeof getNotes.start>
   | ReturnType<typeof getNotes.succeed>
@@ -107,4 +118,5 @@ export type NoteAction =
   | ReturnType<typeof editNote>
   | ReturnType<typeof deleteNote.start>
   | ReturnType<typeof deleteNote.succeed>
-  | ReturnType<typeof deleteNote.fail>;
+  | ReturnType<typeof deleteNote.fail>
+  | ReturnType<typeof deleteUnsavedNote>;
