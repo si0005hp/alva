@@ -56,7 +56,7 @@ const noteReducer: Reducer<NoteState, NoteAction> =
           const {noteIdxOnEdit, note} = action.payload.params;
           return {
             ...state,
-                notes: applyPatchToNoteByIdx(note, noteIdxOnEdit, state.notes)
+                notes: applyPatchToNotesByIdx(note, noteIdxOnEdit, state.notes)
           }
         default: {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -71,7 +71,7 @@ export default noteReducer;
 const applyPatchToNotesById = (updatedNote: Note, notes: Note[]) =>
     notes.map(note => (note.id === updatedNote.id ? updatedNote : note));
 
-const applyPatchToNoteByIdx =
+const applyPatchToNotesByIdx =
     (updatedNote: Note, updatedNoteIdx: number, notes: Note[]) =>
         notes.map((note, idx) => (idx === updatedNoteIdx ? updatedNote : note));
 
