@@ -9,8 +9,8 @@ import { createBrowserHistory } from "history";
 import { Router } from "react-router";
 import rootSaga from "./sagas/note";
 import { composeWithDevTools } from "redux-devtools-extension";
-// import noteReducer from "./reducers/note";
 import rootReducer from "./reducers";
+import "semantic-ui-css/semantic.min.css";
 
 const history = createBrowserHistory();
 const sagaMiddleWare = createSagaMiddleware();

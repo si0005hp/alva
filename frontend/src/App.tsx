@@ -11,7 +11,8 @@ const App: React.FC = () => {
     <div className="App">
       <Switch>
         <Route exact path="/login" component={Login} />
-        <Route exact path="/callback" render={auth0.callback} />
+        <Route exact path="/logout" render={auth0.logout} />
+        <Route exact path="/callback" render={auth0.loginCallback} />
         <Route exact path="/main" render={withAuth(Main)} />
         <Route exact path="/ping" component={Ping} />
         <Redirect to="/main" />;

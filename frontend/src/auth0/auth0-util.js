@@ -42,13 +42,14 @@ class Auth0Util {
     return this.isAuthenticated() ? JSON.parse(localStorage.getItem('user')) : null;
   }
 
-  callback = () => {
+  loginCallback = () => {
     this.setTokenByQuery();
     return <Redirect to="/main" />
   }
 
   logout = () => {
     this.unsetToken();
+    return <Redirect to="/login" />
   }
 }
 

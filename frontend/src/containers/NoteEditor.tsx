@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, FormEvent } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { connect } from "react-redux";
 import NoteEditor from "../components/NoteEditor";
@@ -13,6 +13,7 @@ import {
 } from "../actions/note";
 import { NONE_ID } from "../const";
 import { RootState } from "../reducers/index";
+import { TextAreaProps } from "semantic-ui-react";
 
 interface StateProps {
   note?: Note;
@@ -58,18 +59,25 @@ const NoteEditorContainer: FC<EnhancedNoteEditorProps> = ({
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) =>
     editNote({ ...note, title: e.target.value });
 
-  const onChangeBody = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
-    editNote({ ...note, body: e.target.value });
+  const onChangeBody = (
+    e: FormEvent<HTMLTextAreaElement>,
+    data: TextAreaProps
+  ) => editNote({ ...note, body: e.currentTarget.value });
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    submitNote(note.id === NONE_ID ? SubmitType.CREATE : SubmitType.UPDATE);
+    if (window.confirm("Save the note?")) {
+      submitNote(note.id === NONE_ID ? SubmitType.CREATE : SubmitType.UPDATE);
+    }
   };
 
   const onClickDelete = (
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    deleteNote(note);
+    e.preventDefault();
+    if (window.confirm("Delete the note?")) {
+      deleteNote(note);
+    }
   };
 
   return (

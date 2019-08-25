@@ -2,4 +2,5 @@ export interface Note {
   id: number;
   title: string;
   body: string;
+  updated_at?: string;
 }

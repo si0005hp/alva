@@ -58,10 +58,19 @@ const NoteTitlesListContainer: FC<EnhancedNoteTitlesListProps> = ({
     }
   }, [changeNoteIdxOnEdit, noteIdxOnEdit, notes]);
 
+  const fmtUpdateAtOfNotes = (notes: Note[]) =>
+    notes.map(n => ({
+      ...n,
+      updated_at: n.updated_at
+        ? new Date(n.updated_at).toLocaleString("ja-JP")
+        : "Not saved yet."
+    }));
+
   return (
     <NoteTitlesList
-      notes={notes}
+      notes={fmtUpdateAtOfNotes(notes)}
       isLoading={isLoading}
+      noteIdxOnEdit={noteIdxOnEdit}
       changeNoteIdxOnEdit={changeNoteIdxOnEdit}
     />
   );

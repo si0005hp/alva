@@ -3,7 +3,6 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import NavHeader from "../components/NavHeader";
-import auth0 from "../auth0/auth0-util";
 import { newEmptyNote, changeNoteIdxOnEdit } from "../actions/note";
 
 interface DispatchProps {
@@ -23,21 +22,15 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps =>
   );
 
 const NavHeaderContainer: FC<EnhancedNavHeaderProps> = ({
-  history,
   newEmptyNote,
   changeNoteIdxOnEdit
 }) => {
-  const logout = () => {
-    auth0.logout();
-    history.push("/login");
-  };
-
   const newNote = () => {
     newEmptyNote();
     changeNoteIdxOnEdit(0);
   };
 
-  return <NavHeader onClickLogout={logout} onClickNew={newNote} />;
+  return <NavHeader onClickNew={newNote} />;
 };
 
 export default withRouter(
