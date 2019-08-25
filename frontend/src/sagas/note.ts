@@ -3,26 +3,34 @@ import {all, call, fork, put, takeLatest} from 'redux-saga/effects';
 import {getNotes, submitNote, SubmitType} from '../actions/note';
 import * as Action from '../actions/types';
 import api from '../api';
-import {Note} from '../types';
+
+// TODO any type parameter
+type ApiRequest = () => Promise<any>;
+type HandleResponse = (response: any) => any;
+
+const apiCallback =
+    async (request: ApiRequest, handleResponse: HandleResponse) => {
+  try {
+    const res = await request();
+    if (res.status !== 200) {
+      throw new Error('Server Error');
+    }
+    return handleResponse(res);
+  } catch (err) {
+    throw err;
+  }
+}
+
+const getApiCallback = (request: ApiRequest, handleResponse: HandleResponse) =>
+    () => apiCallback(request, handleResponse);
 
 /* GET_NOTES */
 function* runGetNotes(action: ReturnType<typeof getNotes.start>) {
-  const apiCall = async () => {
-    try {
-      const res = await api.get('/api/v1/notes');
-      if (res.status !== 200) {
-        throw new Error('Server Error');
-      }
-      const notes: Note[] = res.data.notes;
-
-      return notes;
-    } catch (err) {
-      throw err;
-    }
-  };
+  const apiCallback =
+      getApiCallback(() => api.get('/api/v1/notes'), res => res.data.notes);
 
   try {
-    const notes = yield call(apiCall);
+    const notes = yield call(apiCallback);
     yield put(getNotes.succeed({notes}));
   } catch (err) {
     yield put(getNotes.fail(err));
@@ -37,22 +45,14 @@ export function* watchGetNotes() {
 function* runSubmitNote(action: ReturnType<typeof submitNote.start>) {
   const {submitType, note} = action.payload;
 
-  const apiCall = async (submitType: SubmitType, note: Note) => {
-    try {
-      const res = submitType === SubmitType.CREATE ?
-          await api.post('/api/v1/notes', note) :
-          await api.patch(`/api/v1/notes/${note.id}`, note);
-      if (res.status !== 200) {
-        throw new Error('Server Error');
-      }
-      return res.data.note;
-    } catch (err) {
-      throw err;
-    }
-  };
+  const apiCallback = getApiCallback(
+      submitType === SubmitType.CREATE ?
+          () => api.post('/api/v1/notes', note) :
+          () => api.patch(`/api/v1/notes/${note.id}`, note),
+      res => res.data.note);
 
   try {
-    const resNote = yield call(apiCall, submitType, note);
+    const resNote = yield call(apiCallback);
     yield put(submitNote.succeed({submitType, note}, {note: resNote}));
   } catch (err) {
     yield put(submitNote.fail({submitType, note}, err));
