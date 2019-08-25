@@ -38,6 +38,10 @@ class Auth0Util {
     return this.isAuthenticated() ? localStorage.getItem('idToken') : null;
   }
 
+  getUser = () => {
+    return this.isAuthenticated() ? JSON.parse(localStorage.getItem('user')) : null;
+  }
+
   callback = () => {
     this.setTokenByQuery();
     return <Redirect to="/main" />
