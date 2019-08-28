@@ -31,8 +31,6 @@ export enum SubmitType {
 
 interface SubmitNoteParams {
   submitType: SubmitType;
-  noteIdxOnEdit: number;
-  note: Note;
 }
 
 interface SubmitNoteResult {
@@ -63,7 +61,6 @@ export const newEmptyNote = () => ({
 
 /* EDIT_NOTE */
 interface EditNoteParams {
-  noteIdxOnEdit: number;
   note: Note;
 }
 
@@ -98,12 +95,19 @@ export const deleteNote = {
 };
 
 /* DELETE_UNSAVED_NOTE */
-interface DeleteUnsavedNoteParams {
-  noteIdxOnEdit: number;
+export const deleteUnsavedNote = () => ({
+  type: ActionType.DELETE_UNSAVED_NOTE as typeof ActionType.DELETE_UNSAVED_NOTE,
+  payload: {}
+});
+
+/* DELETE_UNSAVED_NOTE */
+interface ChangeNoteIdxOnEditParams {
+  noteIdx: number;
 }
 
-export const deleteUnsavedNote = (params: DeleteUnsavedNoteParams) => ({
-  type: ActionType.DELETE_UNSAVED_NOTE as typeof ActionType.DELETE_UNSAVED_NOTE,
+/* CHANGE_NOTE_IDX_ON_EDIT */
+export const changeNoteIdxOnEdit = (params: ChangeNoteIdxOnEditParams) => ({
+  type: ActionType.CHANGE_NOTE_IDX_ON_EDIT as typeof ActionType.CHANGE_NOTE_IDX_ON_EDIT,
   payload: { params }
 });
 
@@ -119,4 +123,5 @@ export type NoteAction =
   | ReturnType<typeof deleteNote.start>
   | ReturnType<typeof deleteNote.succeed>
   | ReturnType<typeof deleteNote.fail>
-  | ReturnType<typeof deleteUnsavedNote>;
+  | ReturnType<typeof deleteUnsavedNote>
+  | ReturnType<typeof changeNoteIdxOnEdit>;

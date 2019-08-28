@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { Route, Switch, Redirect } from "react-router-dom";
-import Main from "./Main";
+import Main from "./components/Main";
 import Login from "./components/Login";
 import auth0 from "./auth0/auth0-util";
 import Ping from "./components/Ping";

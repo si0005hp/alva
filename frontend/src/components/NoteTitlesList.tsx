@@ -4,13 +4,13 @@ import { Note } from "../types";
 export interface NoteTitlesListProps {
   notes: Note[];
   isLoading?: boolean;
-  setNoteIdxOnEdit: (id: number) => void;
+  changeNoteIdxOnEdit: (id: number) => void;
 }
 
 const NoteTitlesList: React.FC<NoteTitlesListProps> = ({
   notes = [],
   isLoading = false,
-  setNoteIdxOnEdit
+  changeNoteIdxOnEdit
 }) => {
   return (
     <div className="NoteTitlesList">
@@ -19,7 +19,7 @@ const NoteTitlesList: React.FC<NoteTitlesListProps> = ({
       ) : (
         <ul>
           {notes.map((note, idx) => (
-            <li key={idx} onClick={() => setNoteIdxOnEdit(idx)}>
+            <li key={idx} onClick={() => changeNoteIdxOnEdit(idx)}>
               {note.title}
             </li>
           ))}

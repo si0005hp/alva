@@ -4,24 +4,20 @@ import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import NavHeader from "../components/NavHeader";
 import auth0 from "../auth0/auth0-util";
-import { newEmptyNote } from "../actions/note";
+import { newEmptyNote, changeNoteIdxOnEdit } from "../actions/note";
 
 interface DispatchProps {
   newEmptyNote: () => void;
+  changeNoteIdxOnEdit: (noteIdx: number) => void;
 }
 
-interface OwnProps {
-  setNoteIdxOnEdit: (id: number) => void;
-}
-
-type EnhancedNavHeaderProps = DispatchProps &
-  OwnProps &
-  RouteComponentProps<{}>;
+type EnhancedNavHeaderProps = DispatchProps & RouteComponentProps<{}>;
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps =>
   bindActionCreators(
     {
-      newEmptyNote: () => newEmptyNote()
+      newEmptyNote: () => newEmptyNote(),
+      changeNoteIdxOnEdit: (noteIdx: number) => changeNoteIdxOnEdit({ noteIdx })
     },
     dispatch
   );
@@ -29,7 +25,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps =>
 const NavHeaderContainer: FC<EnhancedNavHeaderProps> = ({
   history,
   newEmptyNote,
-  setNoteIdxOnEdit
+  changeNoteIdxOnEdit
 }) => {
   const logout = () => {
     auth0.logout();
@@ -38,7 +34,7 @@ const NavHeaderContainer: FC<EnhancedNavHeaderProps> = ({
 
   const newNote = () => {
     newEmptyNote();
-    setNoteIdxOnEdit(0);
+    changeNoteIdxOnEdit(0);
   };
 
   return <NavHeader onClickLogout={logout} onClickNew={newNote} />;

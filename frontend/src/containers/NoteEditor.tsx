@@ -12,39 +12,34 @@ import {
   deleteUnsavedNote
 } from "../actions/note";
 import { NONE_ID } from "../const";
+import { RootState } from "../reducers/index";
+
+interface StateProps {
+  note?: Note;
+}
 
 interface DispatchProps {
-  submitNote: (submitType: SubmitType, note: Note) => void;
+  submitNote: (submitType: SubmitType) => void;
   editNote: (note: Note) => void;
   deleteNote: (note: Note) => void;
 }
 
-interface OwnProps {
-  noteIdxOnEdit: number;
-  note: Note;
-}
-
-type EnhancedNoteEditorProps = DispatchProps &
-  OwnProps &
+type EnhancedNoteEditorProps = StateProps &
+  DispatchProps &
   RouteComponentProps<{}>;
 
-const mapDispatchToProps = (
-  dispatch: Dispatch,
-  ownProps: OwnProps
-): DispatchProps =>
+const mapStateToProps = (state: RootState): StateProps => ({
+  note: state.note.notes[state.note.noteIdxOnEdit]
+});
+
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps =>
   bindActionCreators(
     {
-      submitNote: (submitType: SubmitType, note: Note) =>
-        submitNote.start({
-          submitType,
-          noteIdxOnEdit: ownProps.noteIdxOnEdit,
-          note
-        }),
-      editNote: (note: Note) =>
-        editNote({ noteIdxOnEdit: ownProps.noteIdxOnEdit, note }),
+      submitNote: (submitType: SubmitType) => submitNote.start({ submitType }),
+      editNote: (note: Note) => editNote({ note }),
       deleteNote: (note: Note) =>
         note.id === NONE_ID
-          ? deleteUnsavedNote({ noteIdxOnEdit: ownProps.noteIdxOnEdit })
+          ? deleteUnsavedNote()
           : deleteNote.start({ noteId: note.id })
     },
     dispatch
@@ -56,6 +51,10 @@ const NoteEditorContainer: FC<EnhancedNoteEditorProps> = ({
   editNote,
   deleteNote
 }) => {
+  if (!note) {
+    return <></>;
+  }
+
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) =>
     editNote({ ...note, title: e.target.value });
 
@@ -64,10 +63,7 @@ const NoteEditorContainer: FC<EnhancedNoteEditorProps> = ({
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    submitNote(
-      note.id === NONE_ID ? SubmitType.CREATE : SubmitType.UPDATE,
-      note
-    );
+    submitNote(note.id === NONE_ID ? SubmitType.CREATE : SubmitType.UPDATE);
   };
 
   const onClickDelete = (
@@ -90,7 +86,7 @@ const NoteEditorContainer: FC<EnhancedNoteEditorProps> = ({
 
 export default withRouter(
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
   )(NoteEditorContainer)
 );

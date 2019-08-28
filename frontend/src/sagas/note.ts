@@ -1,8 +1,10 @@
+import { select } from "redux-saga/effects";
 import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 
 import { getNotes, submitNote, SubmitType, deleteNote } from "../actions/note";
 import * as Action from "../actions/types";
 import api from "../api";
+import { selectNoteOnEdit } from "../reducers/note";
 
 // TODO any type parameter
 type ApiRequest = () => Promise<any>;
@@ -49,7 +51,8 @@ export function* watchGetNotes() {
 
 /* SUBMIT_NOTE */
 function* runSubmitNote(action: ReturnType<typeof submitNote.start>) {
-  const { submitType, noteIdxOnEdit, note } = action.payload;
+  const { submitType } = action.payload;
+  const note = yield select(state => selectNoteOnEdit(state.note));
 
   const apiCallback = getApiCallback(
     submitType === SubmitType.CREATE
@@ -60,11 +63,9 @@ function* runSubmitNote(action: ReturnType<typeof submitNote.start>) {
 
   try {
     const resNote = yield call(apiCallback);
-    yield put(
-      submitNote.succeed({ submitType, noteIdxOnEdit, note }, { note: resNote })
-    );
+    yield put(submitNote.succeed({ submitType }, { note: resNote }));
   } catch (err) {
-    yield put(submitNote.fail({ submitType, noteIdxOnEdit, note }, err));
+    yield put(submitNote.fail({ submitType }, err));
   }
 }
 

@@ -1,20 +1,24 @@
-import { SubmitType } from "./../actions/note";
 import { AxiosError } from "axios";
 import { Reducer } from "redux";
+
 import { NoteAction } from "../actions/note";
 import * as ActionType from "../actions/types";
 import { Note } from "../types";
+
+import { SubmitType } from "./../actions/note";
 import { NONE_ID } from "./../const";
 
 export interface NoteState {
   notes: Note[];
   isLoading: boolean;
+  noteIdxOnEdit: number;
   error?: AxiosError | null;
 }
 
 export const initialState: NoteState = {
   notes: [],
-  isLoading: false
+  isLoading: false,
+  noteIdxOnEdit: -1
 };
 
 const noteReducer: Reducer<NoteState, NoteAction> = (
@@ -45,7 +49,7 @@ const noteReducer: Reducer<NoteState, NoteAction> = (
           params.submitType === SubmitType.CREATE
             ? applyPatchToNotesByIdx(
                 result.note,
-                params.noteIdxOnEdit,
+                state.noteIdxOnEdit,
                 state.notes
               )
             : applyPatchToNotesById(result.note, state.notes)
@@ -55,17 +59,14 @@ const noteReducer: Reducer<NoteState, NoteAction> = (
 
     /* NEW_EMPTY_NOTE */
     case ActionType.NEW_EMPTY_NOTE:
-      return {
-        ...state,
-        notes: [createEmptyNote(), ...state.notes]
-      };
+      return { ...state, notes: [createEmptyNote(), ...state.notes] };
 
     /* EDIT_NOTE */
     case ActionType.EDIT_NOTE:
-      const { noteIdxOnEdit, note } = action.payload.params;
+      const { note } = action.payload.params;
       return {
         ...state,
-        notes: applyPatchToNotesByIdx(note, noteIdxOnEdit, state.notes)
+        notes: applyPatchToNotesByIdx(note, state.noteIdxOnEdit, state.notes)
       };
 
     /* DELETE_NOTE */
@@ -83,8 +84,12 @@ const noteReducer: Reducer<NoteState, NoteAction> = (
     case ActionType.DELETE_UNSAVED_NOTE:
       return {
         ...state,
-        notes: deleteNoteByIdx(action.payload.params.noteIdxOnEdit, state.notes)
+        notes: deleteNoteByIdx(state.noteIdxOnEdit, state.notes)
       };
+
+    /* CHANGE_NOTE_IDX_ON_EDIT */
+    case ActionType.CHANGE_NOTE_IDX_ON_EDIT:
+      return { ...state, noteIdxOnEdit: action.payload.params.noteIdx };
     default: {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const _: never = action;
@@ -94,6 +99,9 @@ const noteReducer: Reducer<NoteState, NoteAction> = (
 };
 
 export default noteReducer;
+
+export const selectNoteOnEdit = (state: NoteState) =>
+  state.notes[state.noteIdxOnEdit];
 
 const applyPatchToNotesById = (updatedNote: Note, notes: Note[]) =>
   notes.map(note => (note.id === updatedNote.id ? updatedNote : note));
