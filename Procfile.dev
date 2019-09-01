@@ -1,0 +1,2 @@
+web: cd frontend && yarn start
+api: PORT=5001 && bundle exec rails s
