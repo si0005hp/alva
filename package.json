@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "build": "(cd frontend && yarn install && yarn build)",
+    "deploy": "cp -a frontend/build/. public/",
+    "postinstall": "yarn build && yarn deploy"
+  }
+}
