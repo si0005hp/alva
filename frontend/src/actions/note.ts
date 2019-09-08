@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { Note } from "../types";
-import * as ActionType from "./types";
+import { ActionType } from "./types";
 
 /* GET_NOTES */
 interface GetNotesResult {
@@ -9,15 +9,15 @@ interface GetNotesResult {
 
 export const getNotes = {
   start: () => ({
-    type: ActionType.GET_NOTES_START as typeof ActionType.GET_NOTES_START,
+    type: ActionType.GET_NOTES_START,
     payload: {}
   }),
   succeed: (result: GetNotesResult) => ({
-    type: ActionType.GET_NOTES_SUCCEED as typeof ActionType.GET_NOTES_SUCCEED,
+    type: ActionType.GET_NOTES_SUCCEED,
     payload: { result }
   }),
   fail: (error: AxiosError) => ({
-    type: ActionType.GET_NOTES_FAIL as typeof ActionType.GET_NOTES_FAIL,
+    type: ActionType.GET_NOTES_FAIL,
     payload: { error },
     error: true
   })
@@ -39,15 +39,15 @@ interface SubmitNoteResult {
 
 export const submitNote = {
   start: (params: SubmitNoteParams) => ({
-    type: ActionType.SUBMIT_NOTE_START as typeof ActionType.SUBMIT_NOTE_START,
+    type: ActionType.SUBMIT_NOTE_START,
     payload: params
   }),
   succeed: (params: SubmitNoteParams, result: SubmitNoteResult) => ({
-    type: ActionType.SUBMIT_NOTE_SUCCEED as typeof ActionType.SUBMIT_NOTE_SUCCEED,
+    type: ActionType.SUBMIT_NOTE_SUCCEED,
     payload: { params, result }
   }),
   fail: (params: SubmitNoteParams, error: AxiosError) => ({
-    type: ActionType.SUBMIT_NOTE_FAIL as typeof ActionType.SUBMIT_NOTE_FAIL,
+    type: ActionType.SUBMIT_NOTE_FAIL,
     payload: { params, error },
     error: true
   })
@@ -55,7 +55,7 @@ export const submitNote = {
 
 /* NEW_EMPTY_NOTE */
 export const newEmptyNote = () => ({
-  type: ActionType.NEW_EMPTY_NOTE as typeof ActionType.NEW_EMPTY_NOTE,
+  type: ActionType.NEW_EMPTY_NOTE,
   payload: {}
 });
 
@@ -80,15 +80,15 @@ interface DeleteNoteResult {
 
 export const deleteNote = {
   start: (params: DeleteNoteParams) => ({
-    type: ActionType.DELETE_NOTE_START as typeof ActionType.DELETE_NOTE_START,
+    type: ActionType.DELETE_NOTE_START,
     payload: params
   }),
   succeed: (params: DeleteNoteParams, result: DeleteNoteResult) => ({
-    type: ActionType.DELETE_NOTE_SUCCEED as typeof ActionType.DELETE_NOTE_SUCCEED,
+    type: ActionType.DELETE_NOTE_SUCCEED,
     payload: { params, result }
   }),
   fail: (params: DeleteNoteParams, error: AxiosError) => ({
-    type: ActionType.DELETE_NOTE_FAIL as typeof ActionType.DELETE_NOTE_FAIL,
+    type: ActionType.DELETE_NOTE_FAIL,
     payload: { params, error },
     error: true
   })
@@ -96,7 +96,7 @@ export const deleteNote = {
 
 /* DELETE_UNSAVED_NOTE */
 export const deleteUnsavedNote = () => ({
-  type: ActionType.DELETE_UNSAVED_NOTE as typeof ActionType.DELETE_UNSAVED_NOTE,
+  type: ActionType.DELETE_UNSAVED_NOTE,
   payload: {}
 });
 
@@ -107,7 +107,7 @@ interface ChangeNoteIdxOnEditParams {
 
 /* CHANGE_NOTE_IDX_ON_EDIT */
 export const changeNoteIdxOnEdit = (params: ChangeNoteIdxOnEditParams) => ({
-  type: ActionType.CHANGE_NOTE_IDX_ON_EDIT as typeof ActionType.CHANGE_NOTE_IDX_ON_EDIT,
+  type: ActionType.CHANGE_NOTE_IDX_ON_EDIT,
   payload: { params }
 });
 

@@ -2,7 +2,7 @@ import { select } from "redux-saga/effects";
 import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 
 import { getNotes, submitNote, SubmitType, deleteNote } from "../actions/note";
-import * as Action from "../actions/types";
+import { ActionType } from "../actions/types";
 import api from "../api";
 import { selectNoteOnEdit } from "../reducers/note";
 
@@ -46,7 +46,7 @@ function* runGetNotes(action: ReturnType<typeof getNotes.start>) {
 }
 
 export function* watchGetNotes() {
-  yield takeLatest(Action.GET_NOTES_START, runGetNotes);
+  yield takeLatest(ActionType.GET_NOTES_START, runGetNotes);
 }
 
 /* SUBMIT_NOTE */
@@ -70,7 +70,7 @@ function* runSubmitNote(action: ReturnType<typeof submitNote.start>) {
 }
 
 export function* watchSubmitNote() {
-  yield takeLatest(Action.SUBMIT_NOTE_START, runSubmitNote);
+  yield takeLatest(ActionType.SUBMIT_NOTE_START, runSubmitNote);
 }
 
 /* DELETE_NOTE */
@@ -91,7 +91,7 @@ function* runDeleteNote(action: ReturnType<typeof deleteNote.start>) {
 }
 
 export function* watchDeleteNote() {
-  yield takeLatest(Action.DELETE_NOTE_START, runDeleteNote);
+  yield takeLatest(ActionType.DELETE_NOTE_START, runDeleteNote);
 }
 
 export default function* rootSaga() {
